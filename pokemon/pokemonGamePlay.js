@@ -1,5 +1,9 @@
 const inquirer = require('inquirer');
+const { Trainer, Charmander, Squirtle, Bulbasaur, Rattata, Battle } = require('./pokemon');
 
+const playerTrainer= new Trainer();
+let playerTrainerName='';
+const allPokemon = [new Charmander(), new Squirtle(), new Bulbasaur(), new Rattata()]
 const firstQuestions = [
   {
     type: 'input',
@@ -10,27 +14,74 @@ const firstQuestions = [
   {
     type: 'list',
     name: 'pokemon',
-    message: 'Which pokemon do you choose?',
-    choices: ['Pikachu', 'Magikarp'],
-  },
-  // etc...
+    message: 'Which starting pokemon do you choose?',
+    choices: ['Chamander', 'Squirtle', 'Bulbasaur'],
+  }
 ];
 
 const secondQuestions = [
-  //... see examples to how to format questions
+  {
+    message:"What do You Want to Do?",
+    type: "list",
+    name:"question",
+    choices:["Add a Trainer","Fight a selected Pokemon","Fight a random Random Pokemon", "Show All Pokemon", "Level Up!", "Attack!", "Quit"]
+}
 ];
 
 function playGame() {
   inquirer
     .prompt(firstQuestions)
-    .then(function (firstAnswers) {
-      // do stuff with the answers to the firstQuestions, e.g. create trainers and catch pokemon
-      console.log(firstAnswers);
+    .then((firstAnswers) => {
+      playerTrainerName = firstAnswers.name
+      console.log(`Welcome ${playerTrainerName} to a Pokemon battler!`)
+      if (firstAnswers.pokemon==='Chamander') playerTrainer.catch(new Charmander())
+      if (firstAnswers.pokemon==='Squirtle') playerTrainer.catch(new Squirtle())
+      if (firstAnswers.pokemon==='Bulbasaur') playerTrainer.catch(new Bulbasaur())
+
       return inquirer.prompt(secondQuestions);
     })
-    .then(function (secondAnswers) {
-      // do stuff with the answers to the secondQuestions, e.g. choose moves to use / fight / run away / select pokemon to fight with
-    });
+
+    .then (answers => {
+      menuFunc(answers.question)})
+        
 }
+
+function menuFunc(answers) {
+  switch (answers) {
+    case "Fight a selected Pokemon":
+        selectPokemon();
+        break
+      default:
+        console.log('Thanks for playing!');
+      }
+};
+
+function selectPokemon (){
+  const playersBelt = playerTrainer.belt.map((pokeball)=>  pokeball.inside)
+  inquirer
+    .prompt([{
+              message:"Which Pokemon do you want to fight?",
+            type: "list",
+            name:"oppPokemon",
+            choices:['Charmander', 'Bulbasaur', 'Squirtle', 'Rattata']
+            },
+            {
+              message:"Choose a pokemon from your belt",
+            type: "list",
+            name:"yourPokemon",
+            choices:playersBelt
+            } ]
+            )
+    .then((answers)=> {
+      if (answers.trainerPokemon === '...empty'){
+        console.log("You cannot select an empty PokeBall")
+        return selectPokemon ()
+      }
+      const yourPokemon= allPokemon.filter((pokemon)=> pokemon.name === answers.yourPokemon)[0];
+      const oppPokemon =  allPokemon.filter((pokemon)=> pokemon.name === answers.oppPokemon)[0];
+      console.log(yourPokemon, oppPokemon)
+           const newBattle = new Battle(playerTrainerName, yourPokemon, oppPokemon.name, oppPokemon)});
+           
+};
 
 playGame();

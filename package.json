@@ -1,1 +1,19 @@
-{"name":"fun-pokemon-battler","version":"1.0.0","description":"For this sprint, head to Northcoder's L2C app:","main":"index.js","scripts":{"test":"jest"},"keywords":[],"author":"","license":"ISC","dependencies":{"@inquirer/prompts":"^4.3.0","inquirer":"^9.2.16","jest":"^29.7.0"}}
+{
+    "name": "fun-pokemon-battler",
+    "version": "1.0.0",
+    "description": "For this sprint, head to Northcoder's L2C app:",
+    "main": "index.js",
+    "scripts": {
+        "test": "jest"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "devDependencies": {
+        "@inquirer/prompts": "^3.3.0",
+        "jest": "^29.7.0"
+    },
+    "dependencies": {
+        "inquirer": "^8.2.6"
+    }
+}
