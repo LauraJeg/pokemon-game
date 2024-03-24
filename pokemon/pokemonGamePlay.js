@@ -1,5 +1,6 @@
 const inquirer = require('inquirer');
 const { Trainer, Charmander, Squirtle, Bulbasaur, Rattata, Battle } = require('./pokemon');
+const Laura = require('./trainers');
 
 const playerTrainer= new Trainer();
 let playerTrainerName='';
@@ -24,7 +25,7 @@ const secondQuestions = [
     message:"What do You Want to Do?",
     type: "list",
     name:"question",
-    choices:["Add a Trainer","Fight a selected Pokemon","Fight a random Random Pokemon", "Show All Pokemon", "Level Up!", "Attack!", "Quit"]
+    choices:["Fight a Trainer","Fight a selected Pokemon", "Quit"]
 }
 ];
 
@@ -51,6 +52,15 @@ function menuFunc(answers) {
     case "Fight a selected Pokemon":
         selectPokemon();
         break
+    case "Show All Pokemon":
+        console.log("Here's All The Pokemon!")
+        console.table(allPokemon);
+        return inquirer.prompt(secondQuestions)
+          .then (answers => {
+            menuFunc(answers.question)});
+    case "Fight a Trainer":
+        fightATrainer();
+        break;
       default:
         console.log('Thanks for playing!');
       }
@@ -85,14 +95,11 @@ function selectPokemon (){
 };
 
 function battle (newBattle){
-
-
   if (newBattle.hasBattleEnded) {
     return inquirer.prompt(secondQuestions)
         .then (answers => {
           menuFunc(answers.question)});
   }
-
 
     inquirer
       .prompt({
@@ -116,9 +123,22 @@ function battle (newBattle){
           })
 }
 
-playGame();
+function fightATrainer () {
+  console.log(`You are fighting ${Laura.name}!`)
+  const playersBelt = playerTrainer.belt.map((pokeball)=>  pokeball.inside)
+  inquirer
+    .prompt({
+      message:"Choose a pokemon from your belt",
+    type: "list",
+    name:"yourPokemon",
+    choices:playersBelt
+    } )
+    .then((answers) => {
+      const yourPokemon= allPokemon.filter((pokemon)=> pokemon.name === answers.yourPokemon)[0];
+      const newBattle = new Battle(playerTrainerName, yourPokemon, Laura.name, Laura.belt[0])
+      battle(newBattle, 'trainer')
+    })
+  
+}
 
-// while (newBattle.hasBattleEnded === false){
-//   //blah blah blah
-// }
-// menuFunc()
+playGame();
