@@ -114,7 +114,8 @@ function battle (newBattle){
                 newBattle.fight();
                 console.log(`${newBattle.pokemon1.name} has ${newBattle.pokemon1.hitPoints} hitpoints left`)
                 battle(newBattle)
-              } else {
+              } 
+              else {
                 console.log('You ran away!')
                 return inquirer.prompt(secondQuestions)
                         .then (answers => {
